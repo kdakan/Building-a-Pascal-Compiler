@@ -20,11 +20,11 @@
 - [18. Data structures used in the compiler](#18-data-structures-used-in-the-compiler)
 - [19. Types and functions used in the compiler](#19-types-and-functions-used-in-the-compiler)
 
-I don't have much left from the Pascal compiler I had built in 1997 when I was a student at the university. 
-I remember at that time I had written some 10-15 thousand lines of C code, but in the early 2000s, the code was lost as its floppy disk went dead. 
-Fortunately, in 1998, I had created an article on fortunecity.com as an introduction to this compiler, and I was able to find a copy of that article from archive.org. 
-I reformatted the article and put it on GitHub. 
-The techniques I was using at the time also apply to the present, as nothing much has changed in compiler design since the 1960s.
+I don't have much left from the Pascal compiler I had built in 1997 when I was a university student. 
+I remember at that time I had written some 10-15 thousand lines of C code, but in the early 2000s, the code was lost as its floppy disk died. 
+Fortunately, I had an article on fortunecity.com from 1998 about this compiler, and I was able to find a copy of my article from archive.org. 
+I reformatted the article and put it here on GitHub. 
+The techniques I was using at the time also apply to the present, as nothing much has changed in compiler design since then.
 
 ## 1. Compilation stages and parts of a compiler:
 The compilation of a source program consists of the following stages:
