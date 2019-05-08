@@ -139,7 +139,7 @@ The sentence "xxx" can be parsed in two different ways:
         <td align="center"></td>
         <td align="left">\</td>
         <td align="center"></td>
-        <td align="center"><strong>veya</strong></td>
+        <td align="center"><strong>or</strong></td>
         <td align="center"></td>
         <td align="right">/</td>
         <td align="center"></td>
