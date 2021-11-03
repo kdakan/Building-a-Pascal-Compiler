@@ -35,26 +35,26 @@ The compilation of a source program consists of the following stages:
 4. Code optimizer (code optimization, generates optimized machine code in terms of speed and memory usage)
 
 - The purpose of lexical analysis is to recognize the words (tokens) that make up the language and pass them to the parser for syntax analysis.
-- The parser loads syntactic meaning to the words (tokens) with the help of reserved words and signs of the language. 
+- The parser loads syntactic meaning to the words (tokens) with the help of reserved words and special symbols of the language. 
 This is similar to loading syntactic meaning such as subject, object, verb to words in a sentence.
-- As words (tokens) are recognized, they are registered together with some additional information (variable types, addresses, sizes, etc.) to the symbol table. 
+- As words (tokens) are recognized, they are registered together with some additional information (variable types, addresses, sizes, etc.) in the symbol table. 
 When the same words (tokens) are encountered again, the information is stored in the symbol table is used to check for semantic errors.
-- The last step is to produce machine code that matches the meaning and meaning of these words in the sentence. 
+- The last step is to produce machine code that matches the meaning of these words in the sentence. 
 If necessary, the generated code can be optimized to reduce memory or increase speed.
 - In order to make more efficient optimizations and/or to generate code for different machines, 
 first, a more convenient generalized intermediate code is generated, 
 then this intermediate code is optimized and converted to real machine code for the desired machine.
-- Some compilers produce fast interpretable code for a virtual machine and run this program on different machines by interpreting this code.
+- Some compilers produce fast interpretable code for a virtual machine (JVM, CLR, etc.) and run this program on different machines by interpreting this code.
 
 ## 2. Grammar, production, alphabet, language:
-The grammar of a language (G) is as in the simple example shown below:
+The grammar of a language (G) can be demonstrated with a simple example shown below:
 ```
 sentence -> subject object verb
 subject -> I | name
 object -> the book | home
 verb -> went | took
 ```
-The template is determined by the production rules.
+The template of the language grammar is determined by the production rules.
 
 - Here the "|" symbol means "or". 
 Each of these rules, which derives the right-hand symbols from the left-hand symbol, is called a production. 
@@ -62,11 +62,11 @@ The set of production rules is denoted by P.
 - Symbols that are not found on the left side of any production, are called terminal symbols. 
 In the above example, they are symbols I, name, the book, home, went, and took.
 - The set of terminal symbols is indicated by T. 
-For example, the sentence "Michael took the book" is transmitted to the parser by the scanner in the following manner: name(Michael), took, the book.
-The thing in parentheses, "Michael", is the attribute of the terminal symbol "name".
+For example, the sentence "Michael took the book" is transferred to the parser from the scanner in the following manner: name(Michael), took, the book.
+The value in parentheses, that is "Michael", is the attribute of the terminal symbol "name".
 - These attributes, which are transmitted to the parser together with the terminal symbols, 
 are processed by the parser when the productions are applied.
-- In this example, the parser registers the information that "Michael" is a name for future use in the symbol table. 
+- In this example, the parser registers the information that "Michael" is a name, for future use in the symbol table. 
 Then it applies productions to the symbols to obtain the sentence symbol.
 - Symbols other than terminal symbols are called non-terminal symbols. 
 In this example, the non-terminal symbols are "sentence", "subject", "object", and "verb". 
@@ -77,10 +77,10 @@ In this example, the sentencial symbol is "sentence".
 - V=N∪T (N union T) is called an alphabet.
 - The ordered symbol group consisting of terminal symbols, resulting from subsequent application of productions of P, to the S symbol is called a sentence.
 - The whole set of sentences that can be derived from a grammar is called a language and is denoted by L(G).
-- The special terminal symbol, indicated by EPSILON, corresponds to nothing (not to be mixed with the space character).
+- The special terminal symbol, indicated by EPSILON, corresponds to empty or nothing (not to be mixed with the space character).
 
 ## 3. Classification of grammars:
-According to the Chomsky classification, grammars are placed into four classes, from the most general to the most specific as follows:
+According to the Chomsky classification, grammars are groupd into four classes, from the most general to the most specific as follows:
 
 1. Free grammars:
 Productions are of the form: u->v. Here u,v∈V ve u≠EPSILON.
@@ -95,11 +95,11 @@ Such languages ​​are always parsable.
 
 4. Finite (regular) grammars:
 Productions are of the form: x->a or x->ay. Here x,y⊂N and a⊂T. 
-Such grammars are used to describe the words of the language, that is, a grammar that is used by the scanner during word analysis. 
+Such grammars are used to describe the tokens (words) of the language, that is, a grammar that is used by the scanner during lexical (token/word) analysis. 
 Finite grammars can be effectively parsed by finite state machines.
 
-The reason why word analysis and syntax analysis are done separately, is that they belong to different grammar classes. 
-Word analysis is done using much more effective algorithms.
+The reason why lexical analysis and syntax analysis are done separately, is that they belong to different grammar classes. 
+Lexical analysis is done using much more effective algorithms, and sometimes using plain regex libraries.
 
 ## 4. Equivalence and ambiguity in grammars:
 If the sets L(G) and L(H) are equal, the grammars G and H are called equivalent grammars. 
@@ -217,7 +217,7 @@ C statements (user functions)
 ```
 
 ## 8. Lex regular expressions and operators:
-The regular expressions used in Lex include lex operators and the characters that we want to be recognized by the scanner.
+The regular expressions used in Lex include lex operators and the characters that are to be recognized by the scanner.
 ```
 .     single character other than \n            .a              a and its previous character that is not beginning of a line
 *     zero or more characters                   a[a-z]*         lower case words beginning with a (including the word "a")
@@ -290,14 +290,14 @@ Operator defined in lower rows has higher precedence.
 %left    '+' '-'
 %left    '*' '/'
 %right   '^'
-%left    MINUS
+%left    NEGATIVE
 %%
 exprs    : exprs '+' exprs       {$$=$1+$3;}
          | exprs '-' exprs       {$$=$1-$3;}
          | exprs '*' exprs       {$$=$1*$3;}
          | exprs '/' exprs       {$$=$1/$3;}
          | exprs '^' exprs       {$$=power($1,$3);}
-         | '-' exprs %prec MINUS {$$=-$2;}
+         | '-' exprs %prec NEGATIVE {$$=-$2;}
          | INTEGER               {$$=$1;}
          ;
 %%
@@ -317,6 +317,14 @@ In this grammar, the term `1 + 2 * 3 * 4 ^ 5` is parsed bottom up in the followi
     <td align="center"><b><font face="Courier New">p</font></b></td>
     <td align="center"><b><font face="Courier New">r</font></b></td>
     <td align="center"><b><font face="Courier New">s</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
   </tr>
   <tr>
     <td><b><font face="Courier New">&nbsp;</font></b></td>
@@ -329,6 +337,14 @@ In this grammar, the term `1 + 2 * 3 * 4 ^ 5` is parsed bottom up in the followi
     <td><b><font face="Courier New">/</font></b></td>
     <td><b><font face="Courier New">&nbsp;</font></b></td>
     <td><b><font face="Courier New">\</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
   </tr>
   <tr>
     <td><b><font face="Courier New">&nbsp;</font></b></td>
@@ -345,6 +361,10 @@ In this grammar, the term `1 + 2 * 3 * 4 ^ 5` is parsed bottom up in the followi
     <td align="center"><b><font face="Courier New">p</font></b></td>
     <td align="center"><b><font face="Courier New">r</font></b></td>
     <td align="center"><b><font face="Courier New">s</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
   </tr>
   <tr>
     <td><b><font face="Courier New">&nbsp;</font></b></td>
@@ -361,6 +381,10 @@ In this grammar, the term `1 + 2 * 3 * 4 ^ 5` is parsed bottom up in the followi
     <td><b><font face="Courier New">|</font></b></td>
     <td><b><font face="Courier New">&nbsp;</font></b></td>
     <td><b><font face="Courier New">\</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
   </tr>
   <tr>
     <td><b><font face="Courier New">&nbsp;</font></b></td>
@@ -400,6 +424,7 @@ In this grammar, the term `1 + 2 * 3 * 4 ^ 5` is parsed bottom up in the followi
     <td><b><font face="Courier New">/</font></b></td>
     <td><b><font face="Courier New">|</font></b></td>
     <td><b><font face="Courier New">\</font></b></td>
+    <td><b><font face="Courier New">&nbsp;</font></b></td>
   </tr>
   <tr>
     <td><b><font face="Courier New">1</font></b></td>
@@ -425,7 +450,7 @@ In this grammar, the term `1 + 2 * 3 * 4 ^ 5` is parsed bottom up in the followi
 
 - Bottom-up derivation/production follows the post-order traversal of this tree structure. 
 In other words, for each node, all its sub-branches are traversed from left to right, and finally, the node itself is traversed.
-- Operations are carried out by the C statements (C blocks) inside { } next to the production rules. 
+- For each production rule in effect, the C statements (C blocks) inside { } next to the rule, are executed. 
 Here, the pseudo-variables $n correspond to the attributes of the symbols. 
 The attribute of the non-terminal symbol on the left is indicated by $0 or $$, 
 and the attribute of the k.th symbol on the right is represented by $k. 
@@ -437,7 +462,7 @@ Starting from the terminal symbols, all symbols are derived from right to left o
 - A special symbol, the error symbol, is used to derive any syntax errors encountered during parsing/compilation. This allows the parser to go on parsing next statements and help gather more information about the errors in the source program.
 
 ## 13. Local variable storage and nested block scope:
-- The Pascal source code is compiled to intermediate code (p-code) and executed on the virtual stack-machine called p-machine.
+- The Pascal source code is compiled to a form of intermediate code (p-code) and executed on the virtual stack-machine called p-machine.
 - The p-machine is a virtual machine that processes all its commands using its runtime stack. The commands are called p-code.
 - This virtual machine contains only a stack and two registers that address the stack. 
 All data, including pointer variables, is kept on the stack. 
@@ -448,7 +473,7 @@ Storage duration, or the life-span of a local symbol, is the same as the life sp
 - Functions and procedures can call themselves recursively. Temporary variables can also be defined. 
 All these can be achieved by using the runtime stack of the p-machine.
 
-During the course of the execution of a p-code program, the stack frame is as follows:
+During the course of the execution of a p-code program, the runtime stack frame is as follows:
 <table><tbody>
   <tr>
     <td align="center"><b><font face="Courier New">variable<sub>N</sub></font></b></td>
@@ -499,8 +524,8 @@ Parameter1, ..., parameterM is used for parameters of the current function/proce
 - The return address is the address of the command to be executed after the current function/procedure ends or returns.
 
 ## 14. Symbol table:
-- The symbols defined in a block can only be seen in this block and within the blocks in this block. Thanks to the above stack structure, this is provided when the program is processed.
-- The symbol table used in the compiler is in the stack structure to ensure that this is achieved during the recovery phase and the symbols in the different blocks are not mixed with each other.
+- The symbols defined in a block can only be seen in this block and within the blocks in this block. The above runtime stack structure provides this during runtime execution of the program.
+- To ensure that block scoping rules apply, the symbol table used in the compilation phase is also in a stack structure. This way, symbols (variables, functions, procedures, user defned types) in different blocks but with the same name, are not mixed to each other.
 
 For example, if block B and C are located in block A, the status of the symbol stack is:
 
