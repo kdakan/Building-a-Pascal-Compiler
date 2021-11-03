@@ -667,15 +667,15 @@ else stmt3 end;                OPR =
                                OPR =
                                JPC 0,label2
                                label1: (stmt1)
-                               JMP 1abel4
+                               JMP label4
                                label2: OPR CPY
                                LIT const3
                                OPR =
-                               JPC 0,1abel3
+                               JPC 0,label3
                                (stmt2)
-                               JMP 1abel4
-                               1abel3: (stmt3)
-                               1abel4: INT -1
+                               JMP label4
+                               label3: (stmt3)
+                               label4: INT -1
       
 repeat stmt until expr;        label1: (stmt)
                                (expr)
@@ -687,6 +687,8 @@ i=func1(expr1,expr2);          INT 1
                                CAL func1
                                INT -2
 ```
+Note that (expr), (stmt1), etc. are compiled p-code blocks, and label1, label2, etc. are address of the p-code. The compiled p-code blocks and the program itself is stored in a linked list, with the single p-code instruction on each node of the linked list. The P-machine (the virtual machine to execute the generated p-code), is just a tiny program which goes through the p-code instructions in this linked list, then either exeutes the current p-code statement, also utilizing andmaintaining it's runtime stack, or jumps to the specified label (address of a node of p-code in the linked list).
+
 ## 18. Data structures used in the compiler:
 - Linked lists are used to create dynamic arrays.
 - For each new node of the list, dynamic memory must be allocated with the malloc() function in C and then the previous node should be connected to this new node.
