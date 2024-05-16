@@ -524,8 +524,8 @@ Parameter1, ..., parameterM is used for parameters of the current function/proce
 - The return address is the address of the command to be executed after the current function/procedure ends or returns.
 
 ## 14. Symbol table:
-- The symbols defined in a block can only be seen in this block and within the blocks in this block. The above runtime stack structure provides this during runtime execution of the program.
-- To ensure that block scoping rules apply, the symbol table used in the compilation phase is also in a stack structure. This way, symbols (variables, functions, procedures, user defned types) in different blocks but with the same name, are not mixed to each other.
+- The symbols defined in a block can only be seen in this block and within the blocks contained in this block. The above runtime stack structure provides this behavior during runtime execution of the program.
+- To ensure that block scoping rules apply, the symbol table used in the compilation phase is also in a stack structure. This way, symbols (variables, functions, procedures, user defned types) in different blocks but with the same name, are not mixed with each other.
 
 For example, if block B and C are located in block A, the status of the symbol stack is:
 
@@ -609,10 +609,10 @@ CSP 0,8     output a character string                        POP A, FOR I:=1 to 
 Note that true=1, false=0
 
 POP X means to remove the top element of the stack and load it into X (the
-stack is now one smaller). In other words, copy the value pointed by the T register into X, and decrement T.
+stack size is now decreased by one element). In other words, copy the value pointed by the T register into X, and decrement T.
 
-PUSH X means to place the value of X onto the top of the stack (the stack is
-now one bigger). In other words, increment the T register, and copy the value pointed by the T register into X.
+PUSH X means to place the value of X onto the top of the stack (the stack size is
+now increased by one element). In other words, increment the T register, and copy the value pointed by the T register into X.
 
 ## 17. P-code templates for basic Pascal structures:
 ```
@@ -631,7 +631,7 @@ p^=expr;                       (expr)
                                STO 255 p
       
 if expr then stmt1 else stmt2; (expr)
-                               JPC 0,1b1
+                               JPC 0,label1
                                (stmt1)
                                JMP label2
                                label1: (stmt2)
